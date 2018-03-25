@@ -1,31 +1,7 @@
-// Copyright 2014 The Go Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style
-// license that can be found in the LICENSE file.
 
-// +build darwin linux windows
+//	A continuation on the 'basic' gomobile example (golang.org/x/mobile/example/basic)
+//  Draws a background color, that can be changed with touch.
 
-// An app that draws a green triangle on a red background.
-//
-// Note: This demo is an early preview of Go 1.5. In order to build this
-// program as an Android APK using the gomobile tool.
-//
-// See http://godoc.org/golang.org/x/mobile/cmd/gomobile to install gomobile.
-//
-// Get the basic example and use gomobile to build or install it on your device.
-//
-//   $ go get -d golang.org/x/mobile/example/basic
-//   $ gomobile build golang.org/x/mobile/example/basic # will build an APK
-//
-//   # plug your Android device to your computer or start an Android emulator.
-//   # if you have adb installed on your machine, use gomobile install to
-//   # build and deploy the APK to an Android target.
-//   $ gomobile install golang.org/x/mobile/example/basic
-//
-// Switch to your device or emulator to start the Basic application from
-// the launcher.
-// You can also run the application on your desktop by running the command
-// below. (Note: It currently doesn't work on Windows.)
-//   $ go install golang.org/x/mobile/example/basic && basic
 package main
 
 import (
@@ -47,12 +23,9 @@ var (
 	program  gl.Program
 	buf      gl.Buffer
 
-	// Green is used as a variable for the color green, obviously.
-	// It will cycle through on touch and get darker, until it reacher 1.00, then resets.
+	// 'green' is used as a variable for the color green, obviously.
 	green  float32
-	//touchX float32
-	//touchY float32
-
+	// 'isTouching' is used to signal that the user is actively touching the screen.
 	isTouching bool
 )
 
@@ -74,8 +47,7 @@ func main() {
 				}
 			case size.Event:
 				sz = e
-				//touchX = float32(sz.WidthPx / 2)
-				//touchY = float32(sz.HeightPx / 2)
+
 			case paint.Event:
 				if glctx == nil || e.External {
 					// As we are actively painting as fast as
@@ -90,9 +62,6 @@ func main() {
 				// after this one is shown.
 				a.Send(paint.Event{})
 			case touch.Event:
-				//touchX = e.X
-				///touchY = e.Y
-
 				// Switch control to determine what type of touch the program is getting.
 				// Only TypeEnd (if releasing touch) will turn isTouching false.
 				switch e.Type {
@@ -113,7 +82,7 @@ func onPaint(glctx gl.Context, sz size.Event) {
 	// If a touch-input is registered, the float32 green will increase by 0.01 per 'tick'.
 	// It will paint the screen with this colour on that condition.
 
-	// If it happens that 'isTouching' is NOT true, the screen will be painted red.
+	// If it happens that 'isTouching' is NOT true, the screen will be painted red, and sets 'green' to 0.
 	if (isTouching) {
 		green += 0.01
 		if green > 1 {
